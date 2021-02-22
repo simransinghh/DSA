@@ -53,8 +53,8 @@ int main()
     ans = max(ans,largestRectangleArea(matrix[0]));
     for (int i = 1; i < matrix.size(); i++) {
         for (int j = 0; j < matrix[i].size(); j++){
-            matrix[i][j] += matrix[i-1][j];
-        }
+            matrix[i][j] = (char)((matrix[i][j]-'0') + (matrix[i-1][j]-'0'));
+        }        
         ans = max(ans,largestRectangleArea(matrix[i]));
     }
     cout<<ans;
