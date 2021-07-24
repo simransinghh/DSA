@@ -1,0 +1,133 @@
+#include <iostream>
+using namespace std;
+
+int mod  = 1e6 +9;
+int Solution::coinchange2(vector<int> &A, int B) {
+    sort(A.begin(),A.end());
+    vector<int> a(B+1,0);
+    a[0] = 1;
+    for(int i=1;i<=B;i++){
+        int j = 0;
+        while(A[j]<=i){
+            a[i] += a[i-A[j]]%mod;
+            j++;
+        }
+        a[i] = a[i]%mod;
+    }
+    return a[B];
+}
+
+
+
+int Solution::maxProduct(const vector<int> &A) {
+    int N = A.size();
+    if(N == 0) return 0;
+    else if(N == 1) return A[0];
+    else {
+        int max_ending_here = A[0], min_ending_here = A[0];
+        int max_overall = A[0];
+        
+        for(int i = 1; i<N; i++){
+            int temp = max_ending_here;
+            max_ending_here = max({A[i], max_ending_here*A[i], min_ending_here*A[i]});
+            min_ending_here = min({A[i], temp*A[i], min_ending_here*A[i]});
+            max_overall = max(max_overall, max_ending_here);
+        }
+        return max_overall;
+    }
+}
+
+
+
+
+int Solution::maxProduct(const vector<int> &A) {
+    int ans = 0;
+    int neg = -1;
+    int pro = A[0];
+    if(pro>0) ans = pro;
+    else{
+        neg = 0;
+        pro = 1;
+    }
+    for(int i = 1;i<A.size();i++){
+        pro *= A[i];
+        if(A[i]>0) neg = 1;
+        else if(pro<0) pro = 1;
+        else if(pro>0 && pro<1) pro = 1;
+        ans = max(ans,pro);
+    }
+    // cout<<ans<<" ";
+    if(neg == 0) ans = A[0];
+    neg = -1;
+    pro = A[0];
+    if(A[0]<0) neg = 0;
+    for(int i = 1;i<A.size();i++){
+        pro *= A[i];
+        if(pro<0 && A[i]<0) neg = i;
+        if(pro>0 && pro<1) pro = 1;
+        if(pro < 0) ans = max(ans,pro/A[neg]);
+        else {
+            ans = max(ans,pro);
+            neg = -1;
+        }
+    }
+    // cout<<ans<<" ";
+    return ans;
+}
+
+
+
+
+
+int dp[1000][1000];
+int dfs(int ind, string s, int k)
+{
+  if(ind==s.size() && k==0)
+    return 0;
+  if(k<=0)
+    return -1;
+  if(dp[ind][k]!=-1)
+    return dp[ind][k];
+  int w=0,b=0,mini=INT_MAX;
+  for(int i=ind;i<s.size();i++)
+  {
+    if(s[i]=='W')
+      w++;
+    else
+      b++;
+    int temp=dfs(i+1,s,k-1);
+    if(temp!=-1 && temp!=INT_MAX)
+      mini=min(mini,temp+w*b);
+  }
+  dp[ind][k]=mini;
+  return mini;
+}
+int Solution::arrange(string A, int B)
+{
+  if(B>A.size())
+    return -1;
+  memset(dp,-1,sizeof(dp));
+  return dfs(0,A,B);
+ 
+}
+
+
+
+
+int Solution::maxProfit(const vector<int> &A) {
+    if(A.size()==0) return 0;
+    int maxprofit = 0;
+    int minno = A[0];
+    for(int i=1;i<A.size();i++){
+        if(A[i]<minno) minno = A[i];
+        else if(A[i]>minno){
+            maxprofit = max(maxprofit,A[i]-minno);
+        }
+    }
+    return maxprofit;
+}
+
+
+int main() {
+    cout<<"Hello World!";
+}
